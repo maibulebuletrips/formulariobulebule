@@ -1,0 +1,263 @@
+<title>¿Es Siargao para ti?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: una sola columna estrecha, como un mensaje largo. Una pregunta por pantalla, resultado en tarjetas de respuesta. */
+:root{
+  /* Paleta Bule Bule: #165462 · #74acad · #cee7e0 · #f2edea · #b1906f */
+  --bg:#f2edea;          /* arena clara */
+  --surface:#fbf9f7;
+  --ink:#143f49;
+  --muted:#5f7478;
+  --line:#e0d8d1;
+  --lagoon:#165462;      /* azul petróleo */
+  --lagoon-soft:#cee7e0; /* menta */
+  --hibiscus:#4f8d8e;    /* salvia, versión legible de #74acad */
+  --hibiscus-soft:#ece2d7; /* arena de #b1906f */
+  --wa:#165462;
+  --display:"Fraunces", Georgia, "Times New Roman", serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f2a30;--surface:#153840;--ink:#eef3f1;--muted:#a9c3c3;--line:#24474f;
+  --lagoon:#74acad;--lagoon-soft:#1d4a52;--hibiscus:#a9d2cf;--hibiscus-soft:#3a342c;--wa:#74acad;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f2a30;--surface:#153840;--ink:#eef3f1;--muted:#a9c3c3;--line:#24474f;
+  --lagoon:#74acad;--lagoon-soft:#1d4a52;--hibiscus:#a9d2cf;--hibiscus-soft:#3a342c;--wa:#74acad;color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.wrap{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+header{display:flex;flex-direction:column;gap:8px}
+.brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--lagoon);font-weight:700}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,7vw,42px);line-height:1.08;margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:500;color:var(--hibiscus)}
+.lead{margin:0;color:var(--muted);max-width:52ch}
+
+.progress{display:flex;gap:6px}
+.progress span{flex:1;height:5px;border-radius:3px;background:var(--line);transition:background .3s}
+.progress span.on{background:var(--lagoon)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:16px}
+.step-n{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h2{font-family:var(--display);font-weight:500;font-size:clamp(22px,5vw,27px);line-height:1.2;margin:0;text-wrap:balance}
+.hint{margin:-8px 0 0;color:var(--muted);font-size:14px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:12px;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;
+  background:transparent;color:var(--ink);font:inherit;text-align:left;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--lagoon)}
+.opt:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--lagoon);outline-offset:2px}
+.opt[aria-pressed="true"]{border-color:var(--lagoon);background:var(--lagoon-soft)}
+.opt .dot{flex:none;width:18px;height:18px;border-radius:50%;border:2px solid var(--muted)}
+.opt.multi .dot{border-radius:5px}
+.opt[aria-pressed="true"] .dot{border-color:var(--lagoon);background:var(--lagoon);box-shadow:inset 0 0 0 3px var(--surface)}
+input[type=text]{width:100%;font:inherit;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;background:transparent;color:var(--ink)}
+
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:600;border-radius:999px;padding:12px 22px;cursor:pointer;border:1.5px solid transparent}
+.btn.primary{background:var(--lagoon);color:var(--surface)}
+.btn.primary:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+
+.result{display:flex;flex-direction:column;gap:16px}
+.hello{font-family:var(--display);font-size:clamp(26px,6vw,34px);line-height:1.15;margin:0;text-wrap:balance}
+.fit{background:var(--hibiscus-soft);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.fit p{margin:0}
+.answers{display:flex;flex-direction:column;gap:12px}
+.ans{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.ans h3{margin:0;font-size:17px;font-weight:700}
+.ans p{margin:0}
+.ans ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.tag{align-self:flex-start;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--lagoon);background:var(--lagoon-soft);padding:3px 9px;border-radius:999px}
+.cta{background:var(--surface);border:1.5px solid var(--wa);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.cta h3{margin:0;font-family:var(--display);font-weight:500;font-size:22px}
+.cta pre{margin:0;white-space:pre-wrap;font:inherit;font-size:14px;background:var(--bg);border-radius:10px;padding:12px 14px;color:var(--ink)}
+.cta .row{display:flex;gap:10px;flex-wrap:wrap}
+.btn.wa{background:var(--wa);color:var(--surface);text-decoration:none;display:inline-flex;align-items:center}
+.small{font-size:13px;color:var(--muted);margin:0}
+.sign{font-family:var(--display);font-style:italic;font-size:20px;margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">Bule Bule Trips · Siargao 2027</div>
+    <h1>¿Es Siargao <em>para ti?</em></h1>
+    <p class="lead">Me cuentas un poquito de ti, resuelvo tus dudas y te quedas con la paz y la tranquilidad de saber si este viaje es para ti.</p>
+  </header>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <main id="app"></main>
+</div>
+
+<script>
+const WA_NUMBER = "639451724447";
+const WA_SHOW = "+63 945 172 4447";
+
+const steps = [
+  {id:"nombre", type:"text", q:"Antes de nada, ¿cómo te llamas?", hint:"Para saber con quién hablo cuando me escribas.", ph:"Tu nombre"},
+  {id:"compania", type:"single", q:"¿Con quién vendrías?", opts:[
+    ["sola1","Por mi cuenta, sería mi primer viaje sin compañía"],
+    ["sola","Por mi cuenta, pero ya he hecho otros viajes así"],
+    ["acomp","Con alguien (amistad, pareja, familia)"]]},
+  {id:"surf", type:"single", q:"¿Has surfeado alguna vez?", opts:[
+    ["nunca","Nunca, es mi primera vez"],["poco","Alguna vez, pero principiante"],["si","Sí, ya cojo olas sin ayuda"]]},
+  {id:"mes", type:"single", q:"¿Qué mes te encajaría más?", hint:"Las fechas exactas te las paso por WhatsApp.", opts:[
+    ["mayo","Mayo"],["julio","Julio"],["agosto","Agosto"],["octubre","Octubre"],["nose","Aún no lo sé"]]},
+  {id:"busca", type:"multi", q:"¿Qué te apetece más del viaje?", hint:"Elige todo lo que quieras.", opts:[
+    ["surf","Probar o mejorar con el surf"],["islas","Islas, mar y naturaleza"],["local","Conocer la vida local y los proyectos de la isla"],
+    ["pausa","Parar: yoga, meditación, escribir"],["descanso","Dedicarme tiempo y descansar"],["gente","Conocer gente bonita"]]},
+  {id:"adapta", type:"single", q:"¿Cómo llevas adaptarte?", hint:"Filipinas es un país en desarrollo: cortes de luz, lluvia sin avisar, wifi de vacaciones…", opts:[
+    ["bien","Me adapto, es parte de viajar"],["regular","Me cuesta un poco, pero me apetece"],["mal","Lo llevo mal, la verdad. No me apetece"]]},
+  {id:"dudas", type:"multi", q:"¿Qué dudas tienes ahora mismo?", hint:"Marca las que quieras y te respondo en la siguiente pantalla.", opts:[
+    ["llegar","¿Cómo llego a Siargao?"],["mai","¿Vas a estar tú en el viaje?"],["reserva","¿Cómo se hace la reserva?"],
+    ["vacunas","¿Tengo que vacunarme?"],["visado","¿Hace falta visado?"],["dossier","Quiero el dossier con la info"],["ninguna","Ninguna, solo quiero el dossier"]]}
+];
+
+const A = {
+  sola1:{tag:"Viajar por tu cuenta", t:"Ir sin compañía la primera vez da miedo, y es normal",
+    h:`<p>Te cuento algo: la mayoría de las personas que vienen se apuntan solas. Somos un grupo de máximo 10, una pequeña familia, y antes de salir ya tenéis un grupo de WhatsApp para conoceros.</p><p>Yo estoy contigo desde el primer mensaje hasta el último día. El miedo viene contigo en la maleta, pero en Siargao pesa muuucho menos. Voy, con miedo, pero voy.</p>`},
+  sola:{tag:"Viajar por tu cuenta", t:"Vas a estar en muy buena compañía",
+    h:`<p>La mayoría de las personas se apuntan solas, así que llegarás a un grupo de gente en tu misma situación. Máximo 10 personas y grupo de WhatsApp antes de salir para ir conociéndoos.</p>`},
+  acomp:{tag:"Con compañía", t:"Te espero con tu compañía",
+    h:`<p>Perfecto. Solo una cosa: las habitaciones son compartidas y el reparto va por orden de reserva, así que si queréis compartir habitación, reservad a la vez y me lo decís.</p>`},
+  nunca:{tag:"Surf", t:"¿Nunca has surfeado? Mejor todavía",
+    h:`<p>Aquí no venimos a ser pros. Hay una clase de surf con teoría y seguridad antes, tabla incluida y un instructor por cada 2 personas. Da igual tu nivel: lo importante es disfrutar el agua.</p>`},
+  poco:{tag:"Surf", t:"Perfecto para retomarlo",
+    h:`<p>Hay una clase de surf con tabla incluida y un instructor por cada 2 personas. Con tan pocas personas por instructor, la clase se adapta a tu punto.</p>`},
+  si:{tag:"Surf", t:"Vas a disfrutar las olas de Siargao",
+    h:`<p>La clase va con un instructor por cada 2 personas, así que se ajusta a tu nivel.</p>`},
+  llegar:{tag:"Vuelos", t:"¿Cómo llego a Siargao?",
+    h:`<p>Siargao está lejos, y eso es parte de su magia. Desde España se vuela a Manila o a Cebú (normalmente con una escala) y de ahí sale un vuelo corto a la isla.</p><p>No te preocupes: cuando reservas te ayudo a elegir los vuelos. Del aeropuerto al alojamiento hay furgonetas compartidas y te explico cómo cogerlas.</p>`},
+  mai:{tag:"Sobre mí", t:"¿Vas a estar tú en el viaje?",
+    h:`<p>Sí, siempre siempre. Vivo en Siargao y acompaño a cada grupo de principio a fin. Tú fluyes y yo organizo.</p>`},
+  reserva:{tag:"Reserva", t:"¿Cómo se hace la reserva?",
+    h:`<ol><li>Me escribes con la fecha que eliges.</li><li>Te mando los detalles y haces el primer pago, que es la reserva de tu plaza.</li><li>Vuelos y seguro, y te ayudo con los dos.</li><li>Rellenas un formulario corto y entras en el grupo de WhatsApp del viaje.</li></ol><p>Si el grupo no llega a formarse, te devuelvo el 100 %. Los pagos y lo que incluye vienen en el dossier.</p>`},
+  vacunas:{tag:"Salud", t:"¿Tengo que vacunarme?",
+    h:`<p>Para entrar en Filipinas desde España no hay vacunas obligatorias. Mi recomendación es pedir cita en un Centro de Vacunación Internacional (Sanidad Exterior) con unas semanas de margen: te dicen qué te conviene según tu historial.</p>`},
+  visado:{tag:"Documentación", t:"¿Hace falta visado?",
+    h:`<p>Con pasaporte español no necesitas visado para estancias de hasta 30 días. Ojo con dos cosas: el pasaporte tiene que tener al menos 6 meses de validez y necesitas billete de vuelta. Los días antes de volar se rellena un registro online gratuito (eTravel) y te aviso cuando toque.</p>`}
+};
+
+const labels = {
+  compania:{sola1:"por mi cuenta, sería mi primer viaje sin compañía",sola:"por mi cuenta, ya he hecho otros viajes así",acomp:"con alguien"},
+  surf:{nunca:"nunca he surfeado",poco:"alguna vez, soy principiante",si:"ya cojo olas sin ayuda"},
+  mes:{mayo:"mayo",julio:"julio",agosto:"agosto",octubre:"octubre",nose:"aún no sé el mes"}
+};
+
+let i = 0;
+const ans = {nombre:"", busca:[], dudas:[]};
+const app = document.getElementById("app");
+const prog = document.getElementById("progress");
+prog.innerHTML = steps.map(()=>"<span></span>").join("");
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function optLabel(stepId,val){const s=steps.find(x=>x.id===stepId);const o=s.opts.find(o=>o[0]===val);return o?o[1]:val}
+
+function render(){
+  [...prog.children].forEach((s,k)=>s.classList.toggle("on",k<=i));
+  if(i>=steps.length) return renderResult();
+  const s = steps[i];
+  let body = "";
+  if(s.type==="text"){
+    body = `<input type="text" id="f-${s.id}" placeholder="${s.ph}" value="${esc(ans[s.id]||"")}" autocomplete="given-name">`;
+  } else {
+    body = `<div class="opts" role="group" aria-label="${esc(s.q)}">` + s.opts.map(([v,l])=>{
+      const on = s.type==="multi" ? ans[s.id].includes(v) : ans[s.id]===v;
+      return `<button type="button" class="opt ${s.type==="multi"?"multi":""}" data-v="${v}" aria-pressed="${on}"><span class="dot"></span><span>${l}</span></button>`;
+    }).join("") + `</div>`;
+  }
+  app.innerHTML = `<section class="card">
+    <div class="step-n">Pregunta ${i+1} de ${steps.length}</div>
+    <h2>${s.q}</h2>${s.hint?`<p class="hint">${s.hint}</p>`:""}
+    ${body}
+    <div class="nav">
+      <button type="button" class="btn ghost" id="back" ${i===0?"hidden":""}>Atrás</button>
+      <button type="button" class="btn primary" id="next">${i===steps.length-1?"Ver mis respuestas":"Siguiente"}</button>
+    </div></section>`;
+  const next = document.getElementById("next");
+  const valid = ()=> s.type==="text" ? ans.nombre.trim().length>0 : s.type==="multi" ? ans[s.id].length>0 : !!ans[s.id];
+  const upd = ()=>{ next.disabled = !valid(); };
+  if(s.type==="text"){
+    const inp = document.getElementById("f-"+s.id);
+    inp.addEventListener("input",e=>{ans.nombre=e.target.value;upd()});
+    inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&valid()){i++;render()}});
+    inp.focus({preventScroll:true});
+  } else {
+    app.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+      const v=b.dataset.v;
+      if(s.type==="multi"){
+        let arr = ans[s.id];
+        if(v==="ninguna"){ arr = arr.includes("ninguna")?[]:["ninguna"]; }
+        else { arr = arr.filter(x=>x!=="ninguna"); arr = arr.includes(v)?arr.filter(x=>x!==v):[...arr,v]; }
+        ans[s.id]=arr;
+        app.querySelectorAll(".opt").forEach(o=>o.setAttribute("aria-pressed",arr.includes(o.dataset.v)));
+        upd();
+      } else {
+        ans[s.id]=v; app.querySelectorAll(".opt").forEach(o=>o.setAttribute("aria-pressed",o.dataset.v===v));
+        upd(); setTimeout(()=>{i++;render()},220);
+      }
+    }));
+  }
+  upd();
+  next.addEventListener("click",()=>{if(valid()){i++;render()}});
+  const back=document.getElementById("back"); if(back) back.addEventListener("click",()=>{i--;render()});
+}
+
+function fitText(){
+  const n = esc(ans.nombre.trim());
+  if(ans.adapta==="mal") return `<p><strong>Te lo digo con honestidad, ${n}:</strong> Siargao es una isla preciosa y a veces un poco caótica. Se va la luz, llueve sin avisar y el wifi está de vacaciones. Si eso te agobia mucho, puede que no sea tu viaje, y prefiero decírtelo ahora.</p><p>Si aun así te llama, escríbeme y lo hablamos con calma: te cuento cómo es el día a día de verdad, sin filtro.</p>`;
+  if(ans.adapta==="regular") return `<p><strong>Tiene pinta de que sí, ${n}.</strong> Te aviso de que Siargao es real, sin filtro: cortes de luz, lluvia sin avisar, wifi de vacaciones. Con ganas y un poquito de flexibilidad se vive genial, y yo estoy ahí para que todo fluya.</p>`;
+  return `<p><strong>Tiene muuuy buena pinta, ${n}.</strong> Buscas lo que este viaje tiene, y lo imprevisto no te asusta. Esa es justo la gente que lo disfruta de verdad.</p>`;
+}
+
+function waMessage(){
+  const n = ans.nombre.trim();
+  const busca = ans.busca.map(v=>optLabel("busca",v).toLowerCase());
+  const dudas = ans.dudas.filter(d=>d!=="ninguna"&&d!=="dossier").map(v=>optLabel("dudas",v));
+  const quiereDossier = ans.dudas.includes("dossier")||ans.dudas.includes("ninguna");
+  let m = `Hola Mai! Soy ${n}🌸 Me interesa viajar a Siargao en 2027.\n`;
+  m += `· Mes: ${labels.mes[ans.mes]}\n· Vendría ${labels.compania[ans.compania]}\n· Surf: ${labels.surf[ans.surf]}\n`;
+  if(busca.length) m += `· Lo que más me apetece: ${busca.join(", ")}\n`;
+  if(ans.adapta==="regular") m += `· Adaptarme me cuesta un poco\n`;
+  if(ans.adapta==="mal") m += `· Adaptarme lo llevo mal y me gustaría hablarlo\n`;
+  if(dudas.length) m += `· Mis dudas: ${dudas.join(" / ")}\n`;
+  m += quiereDossier ? `¿Me mandas el dossier?` : `¡Gracias!`;
+  return m;
+}
+
+function renderResult(){
+  const n = esc(ans.nombre.trim());
+  const cards = [ans.compania, ans.surf, ...ans.dudas.filter(d=>d!=="ninguna")]
+    .filter((v,k,a)=>A[v] && a.indexOf(v)===k)
+    .map(k=>`<article class="ans"><span class="tag">${A[k].tag}</span><h3>${A[k].t}</h3>${A[k].h}</article>`).join("");
+  const msg = waMessage();
+  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  app.innerHTML = `<section class="result">
+    <p class="hello">Holaaa ${n}, esto es lo que te puedo contar ya</p>
+    <div class="fit">${fitText()}</div>
+    <div class="answers">${cards}</div>
+    <div class="cta">
+      <h3>Escríbeme y te mando el dossier</h3>
+      <p class="small">Tu mensaje ya va escrito con lo que me has contado. Lo puedes cambiar antes de enviarlo.</p>
+      <pre id="msg">${esc(msg)}</pre>
+      <div class="row">
+        <a class="btn wa" href="${url}" target="_blank" rel="noopener">Abrir WhatsApp</a>
+        <button type="button" class="btn ghost" id="copy">Copiar mensaje</button>
+      </div>
+      <p class="small">¿No se abre? Copia el mensaje y escríbeme a <strong>${WA_SHOW}</strong>.</p>
+    </div>
+    <p class="sign">Te espero en la isla bonita. Mai</p>
+    <div class="nav"><button type="button" class="btn ghost" id="restart">Empezar de nuevo</button></div>
+  </section>`;
+  document.getElementById("copy").addEventListener("click",async e=>{
+    const b=e.currentTarget;
+    try{await navigator.clipboard.writeText(msg);b.textContent="Copiado"}
+    catch{const r=document.createRange();r.selectNodeContents(document.getElementById("msg"));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selecciónalo y copia"}
+  });
+  document.getElementById("restart").addEventListener("click",()=>{i=0;Object.assign(ans,{nombre:"",busca:[],dudas:[],compania:null,surf:null,mes:null,adapta:null});render()});
+  window.scrollTo({top:0});
+}
+render();
+</script>
